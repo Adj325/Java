@@ -28,12 +28,6 @@
     <div id="result" style="display: none">
         <table class="table table-responsive table-hover table-bordered table-condensed text-center">
             <tbody style="font-weight: bold" id="corBody">
-                <tr>
-                    <td>歌曲名</td>
-                    <td>歌手名</td>
-                    <td>唱片名</td>
-                    <td>下载链接</td>
-                </tr>
             </tbody>
         </table>
 
@@ -89,7 +83,7 @@
             return false;
         }
         $('#result').show();
-        var ori = '<tr><td>团体名称</td> <td>团体介绍</td> <td>联系方式</td> <td>下载链接</td></tr>';
+        var ori = '<tr><td>歌曲名</td> <td>歌手名</td> <td>唱片名</td> <td>下载链接</td></tr>';
         $('#corBody').append(ori);
         for(var i=0; i < songData.length; i++) {
             var song = songData[i];
