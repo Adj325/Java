@@ -1,2 +1,2 @@
 # Java
-Traces of learing Ptython
+Traces of learing Java
