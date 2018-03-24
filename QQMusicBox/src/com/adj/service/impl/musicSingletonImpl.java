@@ -10,6 +10,9 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 public class musicSingletonImpl implements music{
+    // 在外部无法new的构造方法
+    private musicSingletonImpl(){}
+    
     // 单例模式
     private static class SingeltonHandler{
         private static musicSingletonImpl INSTANCE = new musicSingletonImpl();
