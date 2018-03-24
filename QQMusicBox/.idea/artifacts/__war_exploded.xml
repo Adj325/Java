@@ -1,0 +1,17 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="高端大气上档次_播放器:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/__war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="高端大气上档次_播放器/web/WebRoot" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="高端大气上档次_播放器" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="commons-beanutils-1.7.0" />
+          <element id="library" level="project" name="jackson-annotations-2.9.2" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>
