@@ -20,9 +20,24 @@ public class getsongServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,IOException {
         request.setCharacterEncoding("utf-8");
         response.setContentType("text/html;charset=utf-8");
-        String word = request.getParameter("word") ;
+        String word, check,  p;
+        try{
+            word = request.getParameter("word");
+        }catch (Exception e){
+            word = "青花瓷";
+        }
+        try{
+            p = request.getParameter("p");
+        }catch (Exception e){
+            p = "1";
+        }
+        try{
+            check = request.getParameter("check");
+        }catch (Exception e){
+            check = "no";
+        }
 
-        Map<String,Object>[] result = musicSingletonImpl.getInstance().getSongs(word);
+        Map<String,Object>[] result = musicSingletonImpl.getInstance().getSongs(word, p, check);
 
         ObjectMapper mapper = new ObjectMapper();
         String data = mapper.writeValueAsString(result);

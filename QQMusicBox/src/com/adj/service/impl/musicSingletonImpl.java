@@ -10,9 +10,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.client.methods.CloseableHttpResponse;
 
 public class musicSingletonImpl implements music{
-    // 在外部无法new的构造方法
     private musicSingletonImpl(){}
-    
     // 单例模式
     private static class SingeltonHandler{
         private static musicSingletonImpl INSTANCE = new musicSingletonImpl();
@@ -23,18 +21,25 @@ public class musicSingletonImpl implements music{
 
     // 检测下载链接进程
     class StatusCodeThread extends Thread{
-        public StatusCodeThread(Map<String,Object> song, String[] urlArr) {
-            run(song, urlArr);
+        public StatusCodeThread(Map<String,Object> song, String[] urlArr, String check) {
+            run(song, urlArr, check);
         }
-        public void run(Map<String,Object> song, String[] urlArr){
-            if(getStatusCode(urlArr[0]).equals("200"))
+        public void run(Map<String,Object> song, String[] urlArr, String check){
+            if (check.equals("yes")){
+                if(getStatusCode(urlArr[0]).equals("200"))
+                    song.put("flac", urlArr[0]);
+                if(getStatusCode(urlArr[1]).equals("200"))
+                    song.put("ape", urlArr[1]);
+                if(getStatusCode(urlArr[2]).equals("200"))
+                    song.put("mp3320", urlArr[2]);
+                if(getStatusCode(urlArr[3]).equals("200"))
+                    song.put("mp3128", urlArr[3]);
+            } else {
                 song.put("flac", urlArr[0]);
-            if(getStatusCode(urlArr[1]).equals("200"))
                 song.put("ape", urlArr[1]);
-            if(getStatusCode(urlArr[2]).equals("200"))
                 song.put("mp3320", urlArr[2]);
-            if(getStatusCode(urlArr[3]).equals("200"))
                 song.put("mp3128", urlArr[3]);
+            }
         }
     }
 
@@ -88,10 +93,12 @@ public class musicSingletonImpl implements music{
     }
 
     // 根据key, 搜索歌曲
-    public Map<String,Object>[] getSongs(String key){
+    public Map<String,Object>[] getSongs(String key, String p, String check){
         try {
             System.out.println("搜索: "+key);
-            String url = "http://soso.music.qq.com/fcgi-bin/search_cp?aggr=0&catZhida=0&lossless=1&sem=1&n=15&t=0&p=1&remoteplace=wo.shi.nidaye&g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&w=";
+            String url = "http://soso.music.qq.com/fcgi-bin/search_cp?aggr=0&catZhida=0&lossless=1&p=" + p +
+                    "&sem=1&n=30&t=0&remoteplace=wo.shi.nidaye&g_tk=5381&loginUin=0&hostUin=0&format=json" +
+                    "&inCharset=GB2312&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&w=";
 
             // 创建请求Get实例
             HttpGet httpGet = new HttpGet(url+key);
@@ -133,7 +140,7 @@ public class musicSingletonImpl implements music{
                 result[i].put("singer", singer);
                 result[i].put("albumname", albumname);
                 // 检测下载链接
-                threads[i] = new StatusCodeThread(result[i], urlArr);
+                threads[i] = new StatusCodeThread(result[i], urlArr, check);
                 threads[i].start();
             }
             // 等待所有进程都完毕

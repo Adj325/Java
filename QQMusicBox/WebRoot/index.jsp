@@ -9,17 +9,27 @@
 
 <div class="container center-block">
     <h1 class="text-center">高端大气上档次音乐播发器</h1><br>
+
     <div class="row center-block">
         <div class="col-lg-3"></div>
         <div class="col-lg-6">
-            <form  onsubmit="return search()">
-                <div class="input-group">
-                    <input type="text" id="keyWord" placeholder="请输入关键词" class="form-control">
-                    <span class="input-group-btn">
+            <div class="input-group">
+                <div class="input-group-btn">
+                    <select class="selectpicker form-control" data-live-search="true" id="check">
+                        <option selected>忽略检测</option>
+                        <option>启动检测</option>
+                    </select>
+
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        检测下载啊
+                        <span class="caret"></span>
+                    </button>
+                </div>
+                <input type="text" id="keyWord" placeholder="请输入关键词" class="form-control">
+                <span class="input-group-btn">
                         <span onclick="search()" class="btn btn-success">搜索</span>
                     </span>
-                </div>
-            </form>
+            </div>
         </div>
         <div class="col-lg-3"></div>
     </div>
@@ -30,7 +40,12 @@
             <tbody style="font-weight: bold" id="corBody">
             </tbody>
         </table>
-
+        <div class="">
+            <!---col-md-offset-4 col-md-4 text-center--->
+            <span onclick="getMore()" class="btn btn-md btn-warning center-block">更多</span>
+        </div>
+        <hr>
+        <br>
     </div>
 
     <div id="infoBox" style="display:none; z-index: 1000; position: absolute; top: 30%; right:20%; left:20%;">
@@ -48,27 +63,38 @@
 <script type="text/javascript" src="/js/jquery-3.2.1.js"></script>
 <script>
     songData = {};
+    p = 0;
     // 点击搜索
     function search() {
         $('#corBody').html("");
+        var ori = '<tr><td>歌曲名</td> <td>歌手名</td> <td>唱片名</td> <td>下载链接</td></tr>';
+        $('#corBody').append(ori);
+        p = 0;
+        getData();
+    }
+    // 获取数据
+    function getData(){
+        p += 1;
+        check = 'no';
+        if($('#check').val() == '启用检测')
+            check = 'yes';
         $.ajax({
-            url: '/getsong?word='+$('#keyWord').val(),
+            url: '/getsong?p='+p+'&word='+$('#keyWord').val()+'&check='+check,
             type: 'POST',   // GET POST
             async: true,    // 或false,是否异步
-            // data: {'word':$('#keyWord').val()},
             scriptCharset: 'UTF-8',
-            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            timeout: 100000,       // 超时时间
-            dataType: 'json',    // 返回的数据格式：json/xml/html/script/jsonp/text
+            //contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            timeout: 30*000,       // 超时时间
+            dataType: 'text',    // 返回的数据格式：json/xml/html/script/jsonp/text
             success: function (data, textStatus, jqXHR) {
-                songData = data;
+                songData = eval(data);
+                console.log(data);
                 result_show();
             },
             error: function (xhr, textStatus) {
                 console.log('发生错误');
                 $('#infoBox').show();
                 $('#infoContent').html('警告: 获取数据失败!');
-                return false;
             }
         });
     }
@@ -83,8 +109,6 @@
             return false;
         }
         $('#result').show();
-        var ori = '<tr><td>歌曲名</td> <td>歌手名</td> <td>唱片名</td> <td>下载链接</td></tr>';
-        $('#corBody').append(ori);
         for(var i=0; i < songData.length; i++) {
             var song = songData[i];
             var s = '<tr><td>'+song.songname+'</td><td>'+song.singer+'</td><td>'+song.albumname+'</td>\r\n';
@@ -101,7 +125,17 @@
             $('#corBody').append(s+d);
         }
         songData = {};
-        return false;
+    }
+    // 更多
+    function getMore() {
+        songData = getData();
+        // ajax获取, 等待实现
+        if(JSON.stringify(songData) == '{}'){
+            $('#infoBox').show();
+            $('#infoContent').html('没有更多啦!');
+            return;
+        }
+        result_show();
     }
 </script>
 </html>
