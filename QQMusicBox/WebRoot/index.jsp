@@ -17,7 +17,7 @@
                 <div class="input-group-btn">
                     <select class="selectpicker form-control" data-live-search="true" id="check">
                         <option selected>忽略检测</option>
-                        <option>启动检测</option>
+                        <option>启用检测</option>
                     </select>
 
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
@@ -84,11 +84,10 @@
             async: true,    // 或false,是否异步
             scriptCharset: 'UTF-8',
             //contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-            timeout: 30*000,       // 超时时间
+            timeout: 30*1000,       // 超时时间
             dataType: 'text',    // 返回的数据格式：json/xml/html/script/jsonp/text
             success: function (data, textStatus, jqXHR) {
                 songData = eval(data);
-                console.log(data);
                 result_show();
             },
             error: function (xhr, textStatus) {
